@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Castanum Dashboard</title>
 <meta http-equiv="refresh" content="300">
+<script>
+(function(){
+  const H='8f0f0c77a56cbbee89c797ff63f592f2768ef37be59f7ec16bfd3c71ae6bd458';
+  if(sessionStorage.getItem('dash_auth')===H){return;}
+  async function check(p){
+    const e=new TextEncoder().encode(p);
+    const h=await crypto.subtle.digest('SHA-256',e);
+    return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  const p=prompt('Lösenord:');
+  if(!p){document.documentElement.innerHTML='';return;}
+  check(p).then(h=>{
+    if(h===H){sessionStorage.setItem('dash_auth',H);}
+    else{document.documentElement.innerHTML='<body style="background:#0a0a0f;color:#f87171;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif"><h1>Fel lösenord</h1></body>';}
+  });
+})();
+</script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
